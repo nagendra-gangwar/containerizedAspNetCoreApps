@@ -1,0 +1,1 @@
+# containerizedAspNetCoreApps
