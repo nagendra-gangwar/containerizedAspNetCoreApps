@@ -4,10 +4,9 @@ WORKDIR /source
 
 # copy everything from code repository to source working directory.
 COPY . .
-
-WORKDIR /source/Tailspin.SpaceGame.Web
 RUN dotnet restore
 
+WORKDIR /source/Tailspin.SpaceGame.Web
 # publish the release to /app folder
 RUN dotnet publish -c release -o /app --no-restore
 
