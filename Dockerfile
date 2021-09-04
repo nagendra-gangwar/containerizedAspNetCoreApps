@@ -2,17 +2,16 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
 
-# copy csproj and restore as distinct layers
-COPY *.sln .
-COPY Tailspin.SpaceGame.Web/*.csproj ./Tailspin.SpaceGame.Web/
+# copy everything from code repository to source working directory.
+COPY * .
 RUN dotnet restore
 
-# copy everything else and build app
-COPY Tailspin.SpaceGame.Web/. ./Tailspin.SpaceGame.Web/
-WORKDIR /source/Tailspin.SpaceGame.Web
+WORKDIR /source
+
+# publish the release to /app folder
 RUN dotnet publish -c release -o /app --no-restore
 
-# final stage/image
+# prepare final image from previous buid and release files.
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=build /app ./
