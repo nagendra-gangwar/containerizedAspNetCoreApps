@@ -27,9 +27,9 @@ COPY ["TailSpin.SpaceGame.Web.Models.csproj", "TailSpin.SpaceGame.Web.Models/"]
 
 # Run in a shell, in this case run 'dotnet restore'
 # More the 'RUN' instruction here: https://docs.docker.com/engine/reference/builder/#run
-RUN dotnet restore "Tailspin.SpaceGame.Web/"Tailspin.SpaceGame.Web.csproj"
+RUN dotnet restore "Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj"
 
-WORKDIR "/src/"Tailspin.SpaceGame.Web"
+WORKDIR "/src/Tailspin.SpaceGame.Web"
 COPY . .
 RUN dotnet build "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/build
 
