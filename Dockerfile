@@ -9,11 +9,11 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
 
 # copy everything from code repository to source working directory.
-COPY ["DockerDemoApp/DockerDemoApp.csproj", "DockerDemoApp/"]
-RUN dotnet restore "DockerDemoApp/DockerDemoApp.csproj"
+COPY ["DockerDemoApp.csproj", "."]
+RUN dotnet restore "DockerDemoApp.csproj"
 
 COPY . .
-WORKDIR "/source/DockerDemoApp"
+WORKDIR "/source"
 RUN dotnet build "DockerDemoApp.csproj" -c Release -o /app/build
 
 
