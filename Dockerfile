@@ -22,8 +22,8 @@ WORKDIR /src
 
 # Copy your projects 
 # More on the 'COPY' instruction here: https://docs.docker.com/engine/reference/builder/#copy
-COPY ["Tailspin.SpaceGame.Web.csproj", "Tailspin.SpaceGame.Web/"]
-COPY ["TailSpin.SpaceGame.Web.Models.csproj", "TailSpin.SpaceGame.Web.Models/"]
+COPY ["Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj", "Tailspin.SpaceGame.Web/"]
+COPY ["TailSpin.SpaceGame.Web.Models/TailSpin.SpaceGame.Web.Models.csproj", "TailSpin.SpaceGame.Web.Models/"]
 
 # Run in a shell, in this case run 'dotnet restore'
 # More the 'RUN' instruction here: https://docs.docker.com/engine/reference/builder/#run
