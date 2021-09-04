@@ -29,12 +29,10 @@ COPY . .
 RUN dotnet restore "Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj"
 WORKDIR "/src/Tailspin.SpaceGame.Web"
 
-
-RUN dotnet build "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/build
-
 # Run the publish command using the SDK named as 'build'
 FROM build AS publish
-RUN dotnet publish "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/publish --no-restore
+
 
 # Pull 'base' image and name it as 'final' to allow pull access for publish
 FROM base AS final
