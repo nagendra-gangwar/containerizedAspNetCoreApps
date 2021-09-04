@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
 
 # copy everything from code repository to source working directory.
-COPY * .
+COPY . .
 RUN dotnet restore
 
 WORKDIR /source
