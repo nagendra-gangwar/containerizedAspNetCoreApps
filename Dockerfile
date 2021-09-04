@@ -1,23 +1,27 @@
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
 # https://hub.docker.com/_/microsoft-dotnet
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
 
-# Set the ports where the container listens at runtime
-# More on the 'EXPOSE' instruction here: https://docs.docker.com/engine/reference/builder/#workdir
-EXPOSE 80
-EXPOSE 443
-
 # copy everything from code repository to source working directory.
+COPY ["DockerDemoApp/DockerDemoApp.csproj", "DockerDemoApp/"]
+RUN dotnet restore "DockerDemoApp/DockerDemoApp.csproj"
+
 COPY . .
+WORKDIR "/source/DockerDemoApp"
+RUN dotnet build "DockerDemoApp.csproj" -c Release -o /app/build
 
-WORKDIR /source/DockerDemoApp
-RUN dotnet restore
 
-# publish the release to /app folder
-RUN dotnet publish -c release -o /app --no-restore
+FROM build AS publish
+RUN dotnet publish "DockerDemoApp.csproj" -c Release -o /app/publish
 
 # prepare final image from previous buid and release files.
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app ./
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "DockerDemoApp.dll"]
