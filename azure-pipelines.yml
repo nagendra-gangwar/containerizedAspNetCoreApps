@@ -11,7 +11,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '7f0d9312-a1a9-4820-9c73-1363d15901c2'
-  imageRepository: 'nagendragangwarcontainerizedaspnetcoreapps'
+  imageRepository: 'npgselfaspnetapp'
   containerRegistry: 'npgacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'

@@ -1,22 +1,23 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# https://hub.docker.com/_/microsoft-dotnet
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /source
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
-WORKDIR /app
+# Set the ports where the container listens at runtime
+# More on the 'EXPOSE' instruction here: https://docs.docker.com/engine/reference/builder/#workdir
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
-WORKDIR /src
-COPY ["Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj", "Tailspin.SpaceGame.Web/"]
-RUN dotnet restore "Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj"
+# copy everything from code repository to source working directory.
 COPY . .
-WORKDIR "/src/Tailspin.SpaceGame.Web"
-RUN dotnet build "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/publish
+WORKDIR /source/DockerDemoApp
+RUN dotnet restore
 
-FROM base AS final
+# publish the release to /app folder
+RUN dotnet publish -c release -o /app --no-restore
+
+# prepare final image from previous buid and release files.
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Tailspin.SpaceGame.Web.dll"]
+COPY --from=build /app ./
+ENTRYPOINT ["dotnet", "DockerDemoApp.dll"]
