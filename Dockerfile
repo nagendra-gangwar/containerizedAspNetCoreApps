@@ -1,32 +1,21 @@
-# use asp.net runtime and create base layer.
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+WORKDIR /app
 EXPOSE 80
 EXPOSE 443
-WORKDIR /app
 
-# use sdk as build
-FROM microsoft/dotnet:2.1-sdk AS build
-#change working directory
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 
-# copy all files from source code to src folder
-COPY . .
-
-#restore project
+COPY ["Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj", "Tailspin.SpaceGame.Web/"]
 RUN dotnet restore "Tailspin.SpaceGame.Web/Tailspin.SpaceGame.Web.csproj"
-
-# change working directory.
+COPY . .
 WORKDIR "/src/Tailspin.SpaceGame.Web"
+RUN dotnet build "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/build
 
-#build
-RUN dotnet build "Tailspin.SpaceGame.Web.csproj" -c Release -o /app
-
-#publish binaries
 FROM build AS publish
-
-RUN dotnet publish "Tailspin.SpaceGame.Web.csproj" -c Release -o /app
+RUN dotnet publish "Tailspin.SpaceGame.Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Tailspin.SpaceGame.Web.dll"]
